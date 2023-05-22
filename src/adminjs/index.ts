@@ -1,0 +1,32 @@
+import AdminJs from 'adminjs';
+import AdminJsExpress from '@adminjs/express';
+import AdminJsSequelize from '@adminjs/sequelize';
+import { database } from '../database';
+import { adminJsResources } from './resources';
+import { User } from '../models';
+import bcrypt from 'bcrypt';
+import { locale } from './locale';
+import { dashboardOptions } from './Dashboard';
+import { brandingOptions } from './branding';
+import { authenticationOptions } from './authentication';
+
+AdminJs.registerAdapter(AdminJsSequelize);
+
+export const adminJs = new AdminJs({
+  databases: [database],
+  resources: adminJsResources,
+  rootPath: '/admin',
+  branding: brandingOptions,
+  locale: locale,
+  dashboard: dashboardOptions,
+});
+
+export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
+  adminJs,
+  authenticationOptions,
+  null,
+  {
+    resave: false,
+    saveUnitialized: false,
+  }
+);
