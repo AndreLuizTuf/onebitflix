@@ -83,11 +83,11 @@ export const User = database.define<UserInstance, User>(
 
 User.prototype.checkPassword = function (
   password: string,
-  callbackfn: CheckPasswordCallback
+  callbackfn: (err: Error | undefined, isSame: boolean) => void
 ) {
   bcrypt.compare(password, this.password, (err, isSame) => {
     if (err) {
-      callbackfn(err);
+      callbackfn(err, false);
     } else {
       callbackfn(err, isSame);
     }
